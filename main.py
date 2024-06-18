@@ -77,10 +77,12 @@ def BC(group_matrix):
         temp = temp.rank(method='average') - 1
         res.loc[i] = temp
     return res.sum(axis = 0)
-
+    
+# 벡터화로 한번에 계산하기
 def BC_Optimized(group_matrix):
     return group_matrix.rank(method='average', axis=1).sum(axis=0) - group_matrix.shape[0]
 
+# 전통적인 깡 구현
 def CR(group_matrix):
     n = 100
     res = pd.DataFrame(index=group_matrix.columns[:n], columns=group_matrix.columns[:n], dtype=float)
@@ -98,19 +100,21 @@ def CR(group_matrix):
                 res.at[i,j] = -1
     return res.sum(axis=0)
 
+# 벡터화를 통해 유저별로 어느 영화가 평이 좋은지 한번에 계산해버리자
 def CR_Optimized(group_matrix):
     n = len(group_matrix.columns)
     # n = 1000
     nparr = group_matrix.T.values
     res = np.zeros((n,n))
-    idx_upper = np.triu_indices(n, k = 1)
+
     for i in range(n):
         for j in range(i+1, n):
             res[i,j] = (nparr[i] > nparr[j]).sum()
             res[j,i] = (nparr[i] < nparr[j]).sum()
-    #
+    
     return pd.Series(  np.sign(res - res.T).sum(axis = 0), index = group_matrix.columns[:n])
 
+# 삼각형 인덱스를 반환하는 triu_indices를 써서 벡터화로 전부 한번에 계산해버리자
 def CR_Optimized2(group_matrix):
     n = len(group_matrix.columns)
     # n = 1000
@@ -130,6 +134,7 @@ def CR_Optimized2_Sub(group_matrix, res, idx_upper):
     res.T[idx_upper] += (group_matrix.values[idx_upper[0]] < group_matrix.values[idx_upper[1]]).sum(axis = 1)
 
 # @profile
+# 전부 올리니까 메모리 문제가 생김 -> 유저 1~50까지의 평가 CR 유저 51~100까지의 평가 CR ... 로 쪼개서 시행 후 합산하자
 def CR_Optimized2_Chunk(group_matrix):
     n = len(group_matrix.columns)
     idx_upper = np.triu_indices(n, k=1)
@@ -139,7 +144,6 @@ def CR_Optimized2_Chunk(group_matrix):
     # chunk_size = 100 # 데스크탑 램에서 돌아갈 사이즈
     for start in range(0, total, chunk_size):
         end = min(start + chunk_size, total)
-        # print(start, end)
         subgroup = group_matrix.iloc[start:end, :]
         CR_Optimized2_Sub(subgroup.T, res, idx_upper)
         del subgroup
