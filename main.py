@@ -28,6 +28,9 @@ sys.path.append('/content/drive/MyDrive/{}'.format(FOLDERNAME))
 
 import pandas as pd
 import numpy as np
+import time
+
+start = time.time()
 
 ratings_data = pd.read_csv('ratings.dat', sep='::', header=None, names=['user_id', 'movie_id', 'rating', 'timestamp'],engine='python')
 
@@ -120,11 +123,13 @@ def CR_Optimized2(group_matrix):
     del nparr, res, idx_upper
     return result
 
+# @profile
 def CR_Optimized2_Sub(group_matrix, res, idx_upper):
-    n = len(group_matrix.columns)
-    res[idx_upper] += (group_matrix.T.values[idx_upper[0]] > group_matrix.T.values[idx_upper[1]]).sum(axis = 1)
-    res.T[idx_upper] += (group_matrix.T.values[idx_upper[0]] < group_matrix.T.values[idx_upper[1]]).sum(axis = 1)
+    n = len(group_matrix.index)
+    res[idx_upper] += (group_matrix.values[idx_upper[0]] > group_matrix.values[idx_upper[1]]).sum(axis = 1)
+    res.T[idx_upper] += (group_matrix.values[idx_upper[0]] < group_matrix.values[idx_upper[1]]).sum(axis = 1)
 
+# @profile
 def CR_Optimized2_Chunk(group_matrix):
     n = len(group_matrix.columns)
     idx_upper = np.triu_indices(n, k=1)
@@ -136,7 +141,7 @@ def CR_Optimized2_Chunk(group_matrix):
         end = min(start + chunk_size, total)
         # print(start, end)
         subgroup = group_matrix.iloc[start:end, :]
-        CR_Optimized2_Sub(subgroup, res, idx_upper)
+        CR_Optimized2_Sub(subgroup.T, res, idx_upper)
         del subgroup
 
     result = pd.Series(  np.sign(res - res.T).sum(axis = 0), index = group_matrix.columns)
@@ -167,3 +172,5 @@ for groupnumber in range(3):
   printList(bordaCount.nlargest(10).index)
   print(f"top 10 mvoies of group {groupnumber} using Copeland Rule")
   printList(copelandRule.nlargest(10).index)
+end = time.time()
+print(f"{end - start:.5f} sec")
