@@ -1,0 +1,168 @@
+Filename: main.py
+
+Line #    Mem usage    Increment  Occurrences   Line Contents
+=============================================================
+   112    475.0 MiB    475.0 MiB           1   @profile
+   113                                         def CR_Optimized(group_matrix):
+   114    492.0 MiB     17.0 MiB           1       nparr = group_matrix.T.values
+   115    492.0 MiB      0.0 MiB           1       n = 1000
+   116    492.0 MiB      0.0 MiB           1       res = np.zeros((n,n))
+   117    496.0 MiB      4.1 MiB           1       idx_upper = np.triu_indices(n, k = 1)
+   118    503.3 MiB      0.0 MiB        1001       for i in range(n):
+   119    503.3 MiB      0.0 MiB      500500           for j in range(i+1, n):
+   120    503.3 MiB      0.3 MiB      499500               res[i,j] = (nparr[i] > nparr[j]).sum()
+   121    503.3 MiB      7.0 MiB      499500               res[j,i] = (nparr[i] < nparr[j]).sum()
+   122                                             #
+   123    518.6 MiB     15.3 MiB           1       return pd.Series(  np.sign(res - res.T).sum(axis = 0), index = group_matrix.columns[:1000])
+
+
+top 10 movies of group 0 using Additive Utilitarian
+1. 260
+2. 1196
+3. 1198
+4. 1270
+5. 608
+6. 593
+7. 296
+8. 858
+9. 2571
+10. 1197
+top 10 movies of group 0 using Average
+1. 260
+2. 1196
+3. 1198
+4. 1270
+5. 608
+6. 593
+7. 296
+8. 858
+9. 2571
+10. 1197
+top 10 movies of group 0 using Simple Count
+1. 1196
+2. 260
+3. 1270
+4. 1580
+5. 1210
+6. 1097
+7. 2716
+8. 1198
+9. 589
+10. 480
+top 10 movies of group 0 using Approval Voting
+1. 260
+2. 1196
+3. 1198
+4. 593
+5. 858
+6. 608
+7. 1270
+8. 2858
+9. 296
+10. 318
+top 10 movies of group 0 using Borda Count
+1. 1196
+2. 260
+3. 1270
+4. 1198
+5. 1210
+6. 608
+7. 1097
+8. 296
+9. 2716
+10. 593
+top 10 movies of group 0 using Copeland Rule
+1. 51
+2. 53
+3. 91
+4. 109
+5. 115
+6. 127
+7. 130
+8. 133
+9. 134
+10. 139
+Filename: main.py
+
+Line #    Mem usage    Increment  Occurrences   Line Contents
+=============================================================
+   112    636.4 MiB    636.4 MiB           1   @profile
+   113                                         def CR_Optimized(group_matrix):
+   114    751.3 MiB    114.8 MiB           1       nparr = group_matrix.T.values
+   115    751.3 MiB      0.0 MiB           1       n = 1000
+   116    751.3 MiB      0.0 MiB           1       res = np.zeros((n,n))
+   117    751.3 MiB      0.0 MiB           1       idx_upper = np.triu_indices(n, k = 1)
+   118    751.3 MiB      0.0 MiB        1001       for i in range(n):
+   119    751.3 MiB      0.0 MiB      500500           for j in range(i+1, n):
+   120    751.3 MiB      0.0 MiB      499500               res[i,j] = (nparr[i] > nparr[j]).sum()
+   121    751.3 MiB      0.0 MiB      499500               res[j,i] = (nparr[i] < nparr[j]).sum()
+   122                                             #
+   123    751.3 MiB      0.0 MiB           1       return pd.Series(  np.sign(res - res.T).sum(axis = 0), index = group_matrix.columns[:1000])
+
+
+top 10 movies of group 1 using Additive Utilitarian
+1. 2858
+2. 260
+3. 1210
+4. 2028
+5. 1196
+6. 2762
+7. 593
+8. 527
+9. 2396
+10. 110
+top 10 movies of group 1 using Average
+1. 2858
+2. 260
+3. 1210
+4. 2028
+5. 1196
+6. 2762
+7. 593
+8. 527
+9. 2396
+10. 110
+top 10 movies of group 1 using Simple Count
+1. 2858
+2. 260
+3. 1210
+4. 1196
+5. 2028
+6. 593
+7. 480
+8. 2762
+9. 2396
+10. 2997
+top 10 movies of group 1 using Approval Voting
+1. 2858
+2. 260
+3. 2028
+4. 2762
+5. 593
+6. 1196
+7. 527
+8. 1210
+9. 2396
+10. 608
+top 10 movies of group 1 using Borda Count
+1. 2858
+2. 260
+3. 1210
+4. 1196
+5. 2028
+6. 593
+7. 2762
+8. 480
+9. 2396
+10. 2997
+top 10 movies of group 1 using Copeland Rule
+1. 51
+2. 91
+3. 98
+4. 109
+5. 115
+6. 136
+7. 138
+8. 139
+9. 142
+10. 143
