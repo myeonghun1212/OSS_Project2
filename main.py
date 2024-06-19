@@ -140,7 +140,7 @@ def CR_Optimized2_Chunk(group_matrix):
     idx_upper = np.triu_indices(n, k=1)
     res = np.zeros((n,n), dtype = np.int16)
     total = len(group_matrix.index)
-    chunk_size = 1000 # colab tpu 같이 용량 큰데서 이정도면 돌아감
+    chunk_size = 2000 # colab tpu 같이 용량 큰데서 이정도면 돌아감
     # chunk_size = 100 # 데스크탑 램에서 돌아갈 사이즈
     for start in range(0, total, chunk_size):
         end = min(start + chunk_size, total)
@@ -164,17 +164,17 @@ for groupnumber in range(3):
   approvalVoting = AV(group)
   bordaCount = BC_Optimized(group)
   copelandRule = CR_Optimized2_Chunk(group)
-  print(f"top 10 mvoies of group {groupnumber} using Additive Utilitarian")
+  print(f"top 10 movies of group {groupnumber} using Additive Utilitarian")
   printList(additiveUtilitarian.nlargest(10).index)
-  print(f"top 10 mvoies of group {groupnumber} using Average")
+  print(f"top 10 movies of group {groupnumber} using Average")
   printList(average.nlargest(10).index)
-  print(f"top 10 mvoies of group {groupnumber} using Simple Count")
+  print(f"top 10 movies of group {groupnumber} using Simple Count")
   printList(simpleCount.nlargest(10).index)
-  print(f"top 10 mvoies of group {groupnumber} using Approval Voting")
+  print(f"top 10 movies of group {groupnumber} using Approval Voting")
   printList(approvalVoting.nlargest(10).index)
-  print(f"top 10 mvoies of group {groupnumber} using Borda Count")
+  print(f"top 10 movies of group {groupnumber} using Borda Count")
   printList(bordaCount.nlargest(10).index)
-  print(f"top 10 mvoies of group {groupnumber} using Copeland Rule")
+  print(f"top 10 movies of group {groupnumber} using Copeland Rule")
   printList(copelandRule.nlargest(10).index)
 end = time.time()
 print(f"{end - start:.5f} sec")
