@@ -34,16 +34,16 @@ def get_user_item_matrix_by_group(user_item_matrix, user_groups, group_id):
     return group_matrix
 
 def AU(group_matrix):
-    return group_matrix.sum(axis=0)
+    return np.sum(group_matrix, axis=0)
 
 def Avg(group_matrix):
-    return group_matrix.mean(axis=0)
+    return np.mean(group_matrix, axis=0)
 
 def SC(group_matrix):
-    return group_matrix.notnull().sum(axis=0) 
+    return group_matrix[group_matrix > 0].count(axis=0)
 
 def AV(group_matrix):
-    return (group_matrix >= 4).sum(axis=0)
+    return group_matrix[group_matrix >=4].count(axis=0)
 
 def BC(group_matrix):
     res = pd.DataFrame(columns = group_matrix.columns)

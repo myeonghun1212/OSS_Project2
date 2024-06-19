@@ -1,4 +1,4 @@
-Cluster 0 top 10 results:
+Group 0 top 10 results:
      AU   Avg    SC    AV    BC   CR
 0  1196  1196  1196  1196  1196   33
 1   260   260   260   260   260   51
@@ -10,7 +10,8 @@ Cluster 0 top 10 results:
 7  2028  2028   480   608  1580  120
 8  1270  1270  1198  1197   480  127
 9   593   593   589   318   608  133
-Cluster 1 top 10 results:
+
+Group 1 top 10 results:
      AU   Avg    SC    AV    BC   CR
 0   260   260  1580  1198  1196   51
 1  1196  1196  1270  1196   260   91
@@ -22,7 +23,8 @@ Cluster 1 top 10 results:
 7   296   296   356  2762  1580  134
 8  2571  2571   457   608  2716  139
 9   608   608   377   858  1240  143
-Cluster 2 top 10 results:
+
+Group 2 top 10 results:
      AU   Avg    SC    AV    BC   CR
 0  2858  2858  2858  2858  2858   51
 1   260   260   260   260   260   91
@@ -34,4 +36,5 @@ Cluster 2 top 10 results:
 7  2571  2571   593   527   593  139
 8   527   527  2762  1198  2762  142
 9   589   589  2571  2571  2571  143
-79.94305 sec
+
+85.39414 sec
