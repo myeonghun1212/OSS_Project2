@@ -37,7 +37,7 @@ def AU(group_matrix):
     return np.sum(group_matrix, axis=0)
 
 def Avg(group_matrix):
-    return np.mean(group_matrix, axis=0)
+    return np.mean(group_matrix[group_matrix != 0], axis=0)
 
 def SC(group_matrix):
     return group_matrix[group_matrix > 0].count(axis=0)
