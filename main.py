@@ -18,7 +18,7 @@ user_item_matrix = user_item_matrix.reindex(columns=ids)
 user_item_matrix = user_item_matrix.fillna(0)
 
 # kmeans = KMeans(n_clusters = 3, random_state = 42)
-kmeans = make_pipeline(StandardScaler(), KMeans(n_clusters=3, n_init=10, random_state=0))
+kmeans = make_pipeline(StandardScaler(), KMeans(n_clusters=3, n_init=10))
 kmeans.fit(user_item_matrix)
 
 labels = kmeans.predict(user_item_matrix)
@@ -26,7 +26,7 @@ labels = kmeans.predict(user_item_matrix)
 # 각 유저의 클러스터 레이블 확인
 user_groups = pd.DataFrame({'user_id': ratings_data['user_id'].unique(), 'group': labels})
 
-user_item_matrix = user_item_matrix.astype(np.uint8)
+user_item_matrix = user_item_matrix.astype(np.int8)
 
 def get_user_item_matrix_by_group(user_item_matrix, user_groups, group_id):
     group_users = user_groups[user_groups['group'] == group_id]['user_id']
@@ -104,24 +104,25 @@ def CR_Optimized2(group_matrix):
     del nparr, res, idx_upper
     return result
 
-# @profile
+@profile
 def CR_Optimized2_Sub(group_matrix, res, idx_upper):
-    res[idx_upper] += (group_matrix.values[idx_upper[0]] > group_matrix.values[idx_upper[1]]).sum(axis = 1)
-    res.T[idx_upper] += (group_matrix.values[idx_upper[0]] < group_matrix.values[idx_upper[1]]).sum(axis = 1)
+    diff = group_matrix[idx_upper[0]] - group_matrix[idx_upper[1]]
+    res[idx_upper] += (diff > 0).sum(axis = 1)
+    res.T[idx_upper] += (diff < 0).sum(axis = 1)
 
-# @profile
+@profile
 # 전부 올리니까 메모리 문제가 생김 -> 유저 1~50까지의 평가 CR 유저 51~100까지의 평가 CR ... 로 쪼개서 시행 후 합산하자
 def CR_Optimized2_Chunk(group_matrix):
     n = len(group_matrix.columns)
     idx_upper = np.triu_indices(n, k=1)
     res = np.zeros((n,n), dtype = np.int16)
     total = len(group_matrix.index)
-    chunk_size = 1000 # colab tpu 같이 용량 큰데서 이정도면 돌아감
+    chunk_size = 1200 # colab tpu 같이 용량 큰데서 이정도면 돌아감
     # chunk_size = 100 # 데스크탑 램에서 돌아갈 사이즈
     for start in range(0, total, chunk_size):
         end = min(start + chunk_size, total)
-        subgroup = group_matrix.iloc[start:end, :]
-        CR_Optimized2_Sub(subgroup.T, res, idx_upper)
+        subgroup = group_matrix.iloc[start:end, :] 
+        CR_Optimized2_Sub(subgroup.T.values, res, idx_upper)
         del subgroup
 
     result = pd.Series(  np.sign(res - res.T).sum(axis = 0), index = group_matrix.columns)
